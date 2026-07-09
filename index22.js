@@ -1,38 +1,50 @@
-import discord
-from discord.ext import commands
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 
-# إعدادات البوت
-intents = discord.Intents.default()
-intents.message_content = True
-bot = commands.Bot(command_prefix='!', intents=intents)
+// إعدادات البوت
+const client = new Client({ 
+    intents: [
+        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.GuildMessages, 
+        GatewayIntentBits.MessageContent
+    ] 
+});
 
-# رقم الروم المخصص
-TARGET_CHANNEL_ID = 1512519523058716862
+const TARGET_CHANNEL_ID = '1512519523058716862';
 
-@bot.command() # تم التصحيح هنا
-async def تنبيه(ctx, *, message: str):
-    # تقسيم الرسالة إلى سطر أول (عنوان) وباقي الأسطر (نص)
-    lines = message.split('\n', 1)
-    title = lines[0]
-    description = lines[1] if len(lines) > 1 else ""
+client.on('messageCreate', async message => {
+    // تجاهل رسائل البوتات
+    if (message.author.bot) return;
 
-    # إنشاء الامبيد
-    embed = discord.Embed(
-        title=title,
-        description=description,
-        color=0x161E31
-    )
+    // التأكد من أن الرسالة تبدأ بـ !تنبيه
+    if (message.content.startsWith('!تنبيه')) {
+        // فصل الأمر عن الرسالة
+        const fullMessage = message.content.slice(6).trim();
+        const lines = fullMessage.split('\n');
+        
+        // السطر الأول هو العنوان، والباقي هو النص
+        const title = lines[0] || "تنبيه";
+        const description = lines.slice(1).join('\n') || " ";
 
-    # إضافة الصورة التي حددتها
-    embed.set_image(url="https://cdn.discordapp.com/attachments/1501300022808023351/1524400406426423387/SPOILER_IMG_8689.jpg?ex=6a50ed82&is=6a4f9c02&hm=4ad77fce13d73b8fc556383fbd86830cf4bbecd66a2a9cf1fdafce7217a038bd&")
+        // إنشاء الامبيد باللون المطلوب 0x161E31
+        const embed = new EmbedBuilder()
+            .setTitle(title)
+            .setDescription(description)
+            .setColor(0x161E31)
+            .setImage("https://cdn.discordapp.com/attachments/1501300022808023351/1524400406426423387/SPOILER_IMG_8689.jpg?ex=6a50ed82&is=6a4f9c02&hm=4ad77fce13d73b8fc556383fbd86830cf4bbecd66a2a9cf1fdafce7217a038bd&");
 
-    # إرسال الامبيد للروم المحدد
-    channel = bot.get_channel(TARGET_CHANNEL_ID)
-    if channel:
-        await channel.send(embed=embed)
-        await ctx.send("✅ تم إرسال التنبيه بنجاح!")
-    else:
-        await ctx.send("❌ عذراً، لم أتمكن من العثور على الروم المحددة.")
+        // إرسال الامبيد للروم المحدد
+        try {
+            const channel = await client.channels.fetch(TARGET_CHANNEL_ID);
+            if (channel) {
+                await channel.send({ embeds: [embed] });
+                await message.reply("✅ تم إرسال التنبيه بنجاح!");
+            }
+        } catch (error) {
+            console.error(error);
+            await message.reply("❌ عذراً، لم أتمكن من العثور على الروم المحددة أو إرسال الرسالة.");
+        }
+    }
+});
 
-# تشغيل البوت
+// تشغيل البوت باستخدام التوكن من ملف البيئة
 client.login(process.env.TOKEN);
