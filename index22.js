@@ -30,7 +30,7 @@ client.on('messageCreate', async message => {
             .setTitle(title)
             .setDescription(description)
             .setColor(0x161E31)
-            .setImage("https://cdn.discordapp.com/attachments/1501300022808023351/1524400406426423387/SPOILER_IMG_8689.jpg?ex=6a50ed82&is=6a4f9c02&hm=4ad77fce13d73b8fc556383fbd86830cf4bbecd66a2a9cf1fdafce7217a038bd&");
+            .setImage("https://cdn.discordapp.com/attachments/1501300022808023351/1524926219483873290/IMG_8800.jpg?ex=6a5185b6&is=6a503436&hm=d72fd3a947f539bfc77d746c149c4f0c0c22aebfe24d8ee864a96ee3538d704b&");
 
         // إرسال الامبيد للروم المحدد
         try {
