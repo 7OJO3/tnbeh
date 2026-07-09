@@ -2,9 +2,9 @@
   "name": "my-alert-bot",
   "version": "1.0.0",
   "description": "Bot to send embeds",
-  "main": "index.js",
+  "main": "index22.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index22.js"
   },
   "dependencies": {
     "discord.js": "^14.14.0"
